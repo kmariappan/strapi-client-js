@@ -22,7 +22,7 @@ type StrapiPagination = {
   total: number;
 };
 
-export type PopulateArrayOptionType = {
+export type PopulateDeepArrayOptionType = {
   relation: string;
   selectFields?: string[];
 };

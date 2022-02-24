@@ -1,7 +1,7 @@
 import { AxiosInstance } from 'axios';
 import { generateQueryString, generateQueryFromRawString } from './helpers';
 import { StrapiClientHelper } from './strapi-client-helper';
-import { InferedTypeFromArray, PopulateArrayOptionType, PublicationState, StrapiApiResponse } from './types/base';
+import { InferedTypeFromArray, PopulateDeepArrayOptionType, PublicationState, StrapiApiResponse } from './types/base';
 import { CrudSorting, RealationFilterType } from './types/crud';
 
 export class StrapiFilterBuilder<T> extends StrapiClientHelper<T> {
@@ -290,7 +290,7 @@ export class StrapiFilterBuilder<T> extends StrapiClientHelper<T> {
    *
    * @returns Populate n level for the specified relation
    */
-  populateWithDeep(populateDeepValues: PopulateArrayOptionType[]) {
+  populateDeep(populateDeepValues: PopulateDeepArrayOptionType[]) {
     this.url = this._generatePopulateQuery(populateDeepValues);
     return this;
   }

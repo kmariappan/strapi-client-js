@@ -31,9 +31,6 @@ export type RelationalFilterOperators =
   | 'startsWith'
   | 'endsWith';
 
-//$or	Joins the filters in an "or" expression
-//$and	Joins the filters in an "and" expression
-
 export type CrudFilter<T> = {
   field: keyof T;
   operator: CrudOperators;

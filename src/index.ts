@@ -7,7 +7,7 @@ const defaultOptions: StrapiClientOptions = {
 };
 
 /**
- *
+ * Strapi Client Options Object
  *
  * @param url Strapi application url
  *
