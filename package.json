@@ -1,0 +1,69 @@
+{
+  "name": "@kmariappan/strapi-client-js",
+  "author": "Karthikeyan Mariappan",
+  "description": "Javascript client for Strapi Rest API",
+  "version": "0.0.0-development",
+  "main": "dist/strapi-client.js",
+  "module": "dist/strapi-client.mjs",
+  "typings": "dist/strapi-client.d.ts",
+  "license": "MIT",
+  "engines": {
+    "node": ">=14"
+  },
+  "files": [
+    "dist",
+    "src"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build": "npm run lint && rimraf ./dist && rollup -c",
+    "dev": "nodemon --config nodemon.json src/example/play.ts",
+    "lint": "eslint  . --ext .ts",
+    "prettier-format": "prettier --config .prettierrc 'src/**/*.ts' --write",
+    "semantic-release": "semantic-release --branches main"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "npm run prettier-format && npm run lint"
+    }
+  },
+  "peerDependencies": {
+    "axios": "^0.26.0",
+    "qs": "^6.10.3"
+  },
+  "devDependencies": {
+    "@types/node": "^16.9.4",
+    "@types/qs": "^6.9.7",
+    "@typescript-eslint/eslint-plugin": "^5.12.1",
+    "@typescript-eslint/parser": "^5.12.1",
+    "axios": "^0.26.0",
+    "esbuild": "^0.14.23",
+    "eslint": "^8.9.0",
+    "eslint-config-prettier": "^8.4.0",
+    "eslint-plugin-prettier": "^4.0.0",
+    "husky": "^7.0.4",
+    "nodemon": "^2.0.12",
+    "prettier": "^2.5.1",
+    "qs": "^6.10.3",
+    "rimraf": "^3.0.2",
+    "rollup": "^2.68.0",
+    "rollup-plugin-dts": "^4.1.0",
+    "rollup-plugin-esbuild": "^4.8.2",
+    "ts-node": "^10.2.1",
+    "typescript": "^4.4.3",
+    "cz-conventional-changelog": "^3.3.0",
+    "semantic-release": "^19.0.2"
+  },
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/kmariappan/strapi-client-js.git"
+  },
+  "dependencies": {}
+}
