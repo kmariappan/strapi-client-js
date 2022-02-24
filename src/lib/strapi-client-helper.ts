@@ -1,4 +1,4 @@
-import { InferedTypeFromArray, PopulateArrayOptionType, StrapiApiError, StrapiApiResponse } from './types/base';
+import { InferedTypeFromArray, PopulateDeepArrayOptionType, StrapiApiError, StrapiApiResponse } from './types/base';
 import { CrudFilter, CrudSorting, RealationFilterType } from './types/crud';
 import { parse, stringify } from 'qs';
 import { generateQueryString } from './helpers';
@@ -138,7 +138,7 @@ export abstract class StrapiClientHelper<T> {
     }
   }
 
-  protected _generatePopulateQuery(populateArrayOptions: PopulateArrayOptionType[]): string {
+  protected _generatePopulateQuery(populateArrayOptions: PopulateDeepArrayOptionType[]): string {
     let baseContents = '';
     let manipulatedUrl = '';
 
@@ -152,7 +152,7 @@ export abstract class StrapiClientHelper<T> {
   }
 
   private _generatePopulateString(
-    data: PopulateArrayOptionType,
+    data: PopulateDeepArrayOptionType,
     index: number,
     baseContents: string
   ): { url: string; base: string } {

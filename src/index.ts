@@ -26,7 +26,12 @@ const createClient = (options: StrapiClientOptions): StrapiClient => {
   return new StrapiClient({ ...defaultOptions, ...options });
 };
 
-export { createClient, StrapiClient, StrapiClientOptions };
-export type { StrapiUnifiedResponse, StrapiTimestamp, StrapiPopulatedResponse } from './lib/types/base';
+export { createClient, StrapiClient };
+export type {
+  StrapiUnifiedResponse,
+  StrapiTimestamp,
+  StrapiPopulatedResponse,
+  StrapiClientOptions,
+} from './lib/types/base';
 export type { SignInCredentials, SignUpCredentials } from './lib/types/auth';
 export type { StrapiImage } from './lib/types/image';
