@@ -18,7 +18,7 @@
     "access": "public"
   },
   "scripts": {
-    "build": "npm run lint && rimraf ./dist && rollup -c",
+    "build": "rollup -c",
     "dev": "nodemon --config nodemon.json src/example/play.ts",
     "lint": "eslint  . --ext .ts",
     "prettier-format": "prettier --config .prettierrc 'src/**/*.ts' --write",
