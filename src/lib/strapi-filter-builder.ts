@@ -1,8 +1,8 @@
 import { AxiosInstance } from 'axios';
-import { generateQueryString, generateQueryFromRawString } from './helpers';
+import { generateQueryString, generateQueryFromRawString, stringToArray } from './helpers';
 import { StrapiClientHelper } from './strapi-client-helper';
 import { InferedTypeFromArray, PopulateDeepArrayOptionType, PublicationState, StrapiApiResponse } from './types/base';
-import { CrudSorting, RealationFilterType } from './types/crud';
+import { CrudSorting, RelationalFilterOperators } from './types/crud';
 
 export class StrapiFilterBuilder<T> extends StrapiClientHelper<T> {
   private httpClient: AxiosInstance;
@@ -173,14 +173,13 @@ export class StrapiFilterBuilder<T> extends StrapiClientHelper<T> {
 
   /**
    *
-   * @param relationFilterOptions expects an array with the relation
-   *
-   * ```[{ path: ['subcategories', 'products','id'], operator: 'eq' , value:'' }```
-   *
-   * @returns filtered content
+   * @param path relation path as string type.  Ex - 'subcategories.products.slug'
+   * @param operator "eq" | "ne" | "lt" | "gt" | "lte" | "gte" | "in" | "notIn" | "contains" | "notContains" | "startsWith" | "endsWith"
+   * @param value values can be string, number or array
+   * @returns
    */
-  filterByRelation(relationFilterOptions: RealationFilterType[]) {
-    this.url = this._genrateRelationsFilter(relationFilterOptions);
+  filterDeep(path: string, operator: RelationalFilterOperators, value: string | number | Array<string | number>) {
+    this.url = this._genrateRelationsFilter({ path: stringToArray(path), operator, value });
     return this;
   }
 

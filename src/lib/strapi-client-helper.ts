@@ -1,5 +1,5 @@
 import { InferedTypeFromArray, PopulateDeepArrayOptionType, StrapiApiError, StrapiApiResponse } from './types/base';
-import { CrudFilter, CrudSorting, RealationFilterType } from './types/crud';
+import { CrudFilter, CrudSorting, DeepFilterType } from './types/crud';
 import { parse, stringify } from 'qs';
 import { generateQueryString } from './helpers';
 
@@ -88,7 +88,7 @@ export abstract class StrapiClientHelper<T> {
   protected _generateFilter({ field, operator, value }: CrudFilter<InferedTypeFromArray<T>>): string {
     let rawQuery = '';
     if (Array.isArray(value)) {
-      value.map((val: string) => {
+      value.map(val => {
         rawQuery += `&filters[${field}][$${operator}]=${val}`;
       });
     } else {
@@ -98,21 +98,30 @@ export abstract class StrapiClientHelper<T> {
     return this._handleUrl(generateQueryString(parsedQuery));
   }
 
-  protected _genrateRelationsFilter(options: RealationFilterType[]) {
-    let rawQuery = '';
+  protected _genrateRelationsFilter(deepFilter: DeepFilterType) {
+    let rawQuery = `filters`;
+    const { path: fields, operator, value } = deepFilter;
+    if (Array.isArray(fields)) {
+      fields.map(field => {
+        rawQuery += `[${field}]`;
+      });
+    }
 
-    options.map((option, index) => {
-      const { path: fields, operator, value } = option;
-      rawQuery += index === 0 ? `filters[$and][${index}]` : `&filters[$and][${index}]`;
-      if (Array.isArray(fields)) {
-        fields.map((val: string) => {
-          rawQuery += `[${val}]`;
-        });
-      }
+    const partialQuery = rawQuery;
+
+    if (Array.isArray(value)) {
+      value.map((val, index) => {
+        if (index === 0) {
+          rawQuery += `[$${operator}]=${val}`;
+        } else {
+          rawQuery += `&${partialQuery}[$${operator}]=${val}`;
+        }
+      });
+    } else {
       rawQuery += `[$${operator}]=${value}`;
-    });
-    const parsedQuery = parse(rawQuery);
+    }
 
+    const parsedQuery = parse(rawQuery);
     return this._handleUrl(generateQueryString(parsedQuery));
   }
 

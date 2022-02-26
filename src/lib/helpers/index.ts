@@ -9,3 +9,7 @@ export function generateQueryFromRawString(rawQuery: string): string {
 }
 
 export const isBrowser = () => typeof window !== 'undefined';
+
+export const stringToArray = (value: string): string[] => {
+  return value.split('.');
+};

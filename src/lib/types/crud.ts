@@ -34,17 +34,17 @@ export type RelationalFilterOperators =
 export type CrudFilter<T> = {
   field: keyof T;
   operator: CrudOperators;
-  value: any;
+  value: string | number | Array<string | number>;
 };
 export type CrudSort<T = any> = {
   field: keyof T;
   order?: 'asc' | 'desc';
 };
 
-export type RealationFilterType = {
+export type DeepFilterType = {
   path: Array<string>;
   operator: RelationalFilterOperators;
-  value: any;
+  value: string | number | Array<string | number>;
 };
 
 export declare type CrudSorting<T = any> = CrudSort<T>[];
