@@ -1,8 +1,8 @@
 import { AxiosInstance } from 'axios';
 import { generateQueryString, generateQueryFromRawString, stringToArray } from './helpers';
 import { StrapiClientHelper } from './strapi-client-helper';
-import { InferedTypeFromArray, PopulateDeepArrayOptionType, PublicationState, StrapiApiResponse } from './types/base';
-import { CrudSorting, RelationalFilterOperators } from './types/crud';
+import { InferedTypeFromArray, PublicationState, StrapiApiResponse } from './types/base';
+import { CrudSorting, PopulateDeepOptions, RelationalFilterOperators } from './types/crud';
 
 export class StrapiFilterBuilder<T> extends StrapiClientHelper<T> {
   private httpClient: AxiosInstance;
@@ -282,15 +282,17 @@ export class StrapiFilterBuilder<T> extends StrapiClientHelper<T> {
 
   /**
    *
-   * @param populateDeepValues expects an array with the relation and Selectfields
+   * @param populateDeepValues expects an array with the path, fields and children
+   * @type path: string
    *
-   * ```[{ relation: 'level1', selectFields: ['id','name' ...] }```
-   * ```{ relation: 'level2', selectFields: ['id',....] }]```
-   *
+   * @type fields: Array of strings
+   * 
+   * @type children : Array [key:string, fields:Array of strings]
+  
    * @returns Populate n level for the specified relation
    */
-  populateDeep(populateDeepValues: PopulateDeepArrayOptionType[]) {
-    this.url = this._generatePopulateQuery(populateDeepValues);
+  populateDeep(populateDeepValues: PopulateDeepOptions[]) {
+    this.url = this._generatePopulateDeep(populateDeepValues);
     return this;
   }
 }

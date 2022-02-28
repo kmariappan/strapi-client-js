@@ -22,11 +22,6 @@ type StrapiPagination = {
   total: number;
 };
 
-export type PopulateDeepArrayOptionType = {
-  relation: string;
-  selectFields?: string[];
-};
-
 export type Meta = {
   pagination: StrapiPagination;
 };

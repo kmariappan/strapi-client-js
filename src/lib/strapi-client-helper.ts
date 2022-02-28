@@ -1,7 +1,7 @@
-import { InferedTypeFromArray, PopulateDeepArrayOptionType, StrapiApiError, StrapiApiResponse } from './types/base';
-import { CrudFilter, CrudSorting, DeepFilterType } from './types/crud';
+import { InferedTypeFromArray, StrapiApiError, StrapiApiResponse } from './types/base';
+import { CrudFilter, CrudSorting, DeepFilterType, PopulateDeepOptions } from './types/crud';
 import { parse, stringify } from 'qs';
-import { generateQueryString } from './helpers';
+import { generateQueryString, stringToArray } from './helpers';
 
 export abstract class StrapiClientHelper<T> {
   protected url: string;
@@ -147,43 +147,47 @@ export abstract class StrapiClientHelper<T> {
     }
   }
 
-  protected _generatePopulateQuery(populateArrayOptions: PopulateDeepArrayOptionType[]): string {
-    let baseContents = '';
-    let manipulatedUrl = '';
+  protected _generatePopulateDeep(options: PopulateDeepOptions[]) {
+    let url_string = '';
+    options.map(q => {
+      const manipulatedPath = stringToArray(q.path);
+      let partialQuery = '';
+      if (Array.isArray(manipulatedPath)) {
+        manipulatedPath.map((path, i) => {
+          partialQuery += i === 0 ? `populate[${path}]` : `[populate][${path}]`;
+        });
+      }
 
-    populateArrayOptions.forEach((p, index) => {
-      const result = this._generatePopulateString(p, index, baseContents);
-      baseContents += result.base;
-      manipulatedUrl += result.url;
+      if (q.fields) {
+        q.fields.map((field, i) => {
+          url_string +=
+            i === 0 && url_string === ''
+              ? `${partialQuery}[fields][${i}]=${field}`
+              : `&${partialQuery}[fields][${i}]=${field}`;
+        });
+      }
+
+      if (q.children === '*') {
+        url_string += `&${partialQuery}[populate]=%2A`;
+      }
+
+      if (q.children && q.children !== '*') {
+        const partialQuery2 = partialQuery;
+        let someQuery = '';
+        q.children.map(child => {
+          if (!child.fields) {
+            url_string += `&${partialQuery2}[populate][${child.key}]=%2A`;
+          } else {
+            child.fields.map((field, ind) => {
+              someQuery += `&${partialQuery2}[populate][${child.key}][fields][${ind}]=${field}`;
+            });
+          }
+
+          url_string += `${someQuery}`;
+        });
+      }
     });
 
-    return this._handleUrl(stringify(parse(manipulatedUrl)));
-  }
-
-  private _generatePopulateString(
-    data: PopulateDeepArrayOptionType,
-    index: number,
-    baseContents: string
-  ): { url: string; base: string } {
-    let url = '';
-    let base = '';
-
-    if (index === 0) {
-      if (data.selectFields) {
-        data.selectFields.map(field => {
-          url += `&populate[${data.relation}][fields]=${field}`;
-        });
-        base += `populate[${data.relation}]`;
-      }
-    } else {
-      if (data.selectFields) {
-        data.selectFields.map(field => {
-          url += `&${baseContents}[populate][${data.relation}][fields]=${field}`;
-        });
-        base += `[populate][${data.relation}]`;
-      }
-    }
-
-    return { url, base };
+    return this._handleUrl(stringify(parse(url_string)));
   }
 }

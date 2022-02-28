@@ -47,6 +47,17 @@ export type DeepFilterType = {
   value: string | number | Array<string | number>;
 };
 
+type DeepChild = {
+  key: string;
+  fields?: string[];
+};
+
+export type PopulateDeepOptions = {
+  path: string;
+  fields?: string[];
+  children?: DeepChild[] | '*';
+};
+
 export declare type CrudSorting<T = any> = CrudSort<T>[];
 
 export type CrudFilters<T> = Array<CrudFilter<T>>;
