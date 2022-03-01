@@ -49,27 +49,27 @@ export class StrapiAuthClient extends StrapiClientHelper<AuthData> {
    * @returns data and error objects, data object contains jwt, user and provider
    */
   public signIn(credentials: SignInCredentials): Promise<StrapiApiResponse<AuthData>> {
-    const response: StrapiApiResponse<AuthData> = {
-      data: null,
-    };
-    this.httpClient
-      .post<AuthData>(EndPoint.auth.signIn, {
-        identifier: credentials.email,
-        password: credentials.password,
-      })
-      .then(res => {
-        this._saveSession({
-          access_token: res.data.jwt,
-          user: res.data.user,
+    return new Promise<StrapiApiResponse<AuthData>>((resolve) => {
+      this.httpClient
+        .post<AuthData>(EndPoint.auth.signIn, {
+          identifier: credentials.email,
+          password: credentials.password,
+        })
+        .then((res) => {
+          this._saveSession({
+            access_token: res.data.jwt,
+            user: res.data.user,
+          });
+          resolve({
+            data: res.data,
+          });
+        })
+        .catch((err) => {
+          if (err) {
+            return resolve(this._returnErrorHandler(err));
+          }
         });
-        response.data = res.data;
-      })
-      .catch(err => {
-        if (err) {
-          return Promise.resolve(this._returnErrorHandler(err));
-        }
-      });
-    return Promise.resolve(response);
+    });
   }
 
   /**
@@ -79,26 +79,24 @@ export class StrapiAuthClient extends StrapiClientHelper<AuthData> {
    */
 
   public async signUp(credentials: SignUpCredentials): Promise<StrapiApiResponse<AuthData>> {
-    const response: StrapiApiResponse<AuthData> = {
-      data: null,
-    };
-    this.httpClient
-      .post<AuthData>(EndPoint.auth.signUp, credentials)
-      .then(res => {
-        response.data = res.data;
-        this._saveSession({
-          access_token: res.data.jwt,
-          user: res.data.user,
-        });
-      })
-      .catch(err => {
-        if (err) {
+    return new Promise<StrapiApiResponse<AuthData>>((resolve) => {
+      this.httpClient
+        .post<AuthData>(EndPoint.auth.signUp, credentials)
+        .then((res) => {
+          resolve({ data: res.data });
+          this._saveSession({
+            access_token: res.data.jwt,
+            user: res.data.user,
+          });
+        })
+        .catch((err) => {
           if (err) {
-            return Promise.resolve(this._returnErrorHandler(err));
+            if (err) {
+              return resolve(this._returnErrorHandler(err));
+            }
           }
-        }
-      });
-    return Promise.resolve(response);
+        });
+    });
   }
 
   /**
