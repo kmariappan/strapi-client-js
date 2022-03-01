@@ -23,7 +23,7 @@ export abstract class StrapiClientHelper<T> {
     };
 
     if (Array.isArray(data)) {
-      return data.map(item => this._normalizeData(item));
+      return data.map((item) => this._normalizeData(item));
     }
 
     if (isObject(data)) {
@@ -88,7 +88,7 @@ export abstract class StrapiClientHelper<T> {
   protected _generateFilter({ field, operator, value }: CrudFilter<InferedTypeFromArray<T>>): string {
     let rawQuery = '';
     if (Array.isArray(value)) {
-      value.map(val => {
+      value.map((val) => {
         rawQuery += `&filters[${field}][$${operator}]=${val}`;
       });
     } else {
@@ -102,7 +102,7 @@ export abstract class StrapiClientHelper<T> {
     let rawQuery = `filters`;
     const { path: fields, operator, value } = deepFilter;
     if (Array.isArray(fields)) {
-      fields.map(field => {
+      fields.map((field) => {
         rawQuery += `[${field}]`;
       });
     }
@@ -127,7 +127,7 @@ export abstract class StrapiClientHelper<T> {
 
   protected _generateSort<T>(_sort: CrudSorting<T>): string {
     const sort: string[] = [];
-    _sort.map(item => {
+    _sort.map((item) => {
       if (item.order) {
         sort.push(`${item.field}:${item.order}`);
       } else {
@@ -149,7 +149,7 @@ export abstract class StrapiClientHelper<T> {
 
   protected _generatePopulateDeep(options: PopulateDeepOptions[]) {
     let url_string = '';
-    options.map(q => {
+    options.map((q) => {
       const manipulatedPath = stringToArray(q.path);
       let partialQuery = '';
       if (Array.isArray(manipulatedPath)) {
@@ -174,7 +174,7 @@ export abstract class StrapiClientHelper<T> {
       if (q.children && q.children !== '*') {
         const partialQuery2 = partialQuery;
         let someQuery = '';
-        q.children.map(child => {
+        q.children.map((child) => {
           if (!child.fields) {
             url_string += `&${partialQuery2}[populate][${child.key}]=%2A`;
           } else {

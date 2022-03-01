@@ -66,13 +66,13 @@ export class StrapiQueryBuilder<T> extends StrapiClientHelper<T> {
    * @returns By default the new record is returned.
    */
   async create(values: T): Promise<StrapiApiResponse<T>> {
-    return new Promise<StrapiApiResponse<T>>(resolve => {
+    return new Promise<StrapiApiResponse<T>>((resolve) => {
       this.httpClient
         .post<StrapiApiResponse<T>>(this.url, this._handleValues(values))
-        .then(res => {
+        .then((res) => {
           resolve(this.normalizData ? this._returnDataHandler(res.data) : res.data);
         })
-        .catch(err => {
+        .catch((err) => {
           if (err) {
             resolve(this._returnErrorHandler(err));
           }
@@ -91,7 +91,7 @@ export class StrapiQueryBuilder<T> extends StrapiClientHelper<T> {
         const { data } = await this.httpClient.post<StrapiApiResponse<T>>(this.url, this._handleValues(value));
         return Promise.resolve(data);
       })
-    ).catch(error => {
+    ).catch((error) => {
       if (error) {
         this._returnErrorHandler(error);
       }
@@ -108,13 +108,13 @@ export class StrapiQueryBuilder<T> extends StrapiClientHelper<T> {
    */
   async update(id: string | number, values: Partial<T>): Promise<StrapiApiResponse<T>> {
     const url = `${this.url}/${id}`;
-    return new Promise<StrapiApiResponse<T>>(resolve => {
+    return new Promise<StrapiApiResponse<T>>((resolve) => {
       this.httpClient
         .put<StrapiApiResponse<T>>(url, this._handleValues(values))
-        .then(res => {
+        .then((res) => {
           resolve(this.normalizData ? this._returnDataHandler(res.data) : res.data);
         })
-        .catch(err => {
+        .catch((err) => {
           if (err) {
             resolve(this._returnErrorHandler(err));
           }
@@ -135,7 +135,7 @@ export class StrapiQueryBuilder<T> extends StrapiClientHelper<T> {
         const { data } = await this.httpClient.put<StrapiApiResponse<T>>(url, this._handleValues(value.variables));
         return Promise.resolve(data);
       })
-    ).catch(error => {
+    ).catch((error) => {
       if (error) {
         this._returnErrorHandler(error);
       }
@@ -152,13 +152,13 @@ export class StrapiQueryBuilder<T> extends StrapiClientHelper<T> {
    */
   async deleteOne(id: string | number): Promise<StrapiApiResponse<T>> {
     const url = `${this.url}/${id}`;
-    return new Promise<StrapiApiResponse<T>>(resolve => {
+    return new Promise<StrapiApiResponse<T>>((resolve) => {
       this.httpClient
         .delete<StrapiApiResponse<T>>(url)
-        .then(res => {
+        .then((res) => {
           resolve(res.data);
         })
-        .catch(err => {
+        .catch((err) => {
           if (err) {
             resolve(this._returnErrorHandler(err));
           }
@@ -173,11 +173,11 @@ export class StrapiQueryBuilder<T> extends StrapiClientHelper<T> {
    */
   async deleteMany(ids: string[] | number[]): Promise<{ success: true }> {
     await Promise.all(
-      ids.map(async id => {
+      ids.map(async (id) => {
         const { data } = await this.httpClient.delete(`${this.url}/${id}`);
         return data;
       })
-    ).catch(err => {
+    ).catch((err) => {
       if (err) {
         return this._returnErrorHandler(err);
       }

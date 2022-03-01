@@ -22,13 +22,13 @@ export class StrapiFilterBuilder<T> extends StrapiClientHelper<T> {
       // eslint-disable-next-line no-console
       console.log(this.url);
     }
-    return new Promise<StrapiApiResponse<T>>(resolve => {
+    return new Promise<StrapiApiResponse<T>>((resolve) => {
       this.httpClient
         .get<StrapiApiResponse<T>>(this.url)
-        .then(res => {
+        .then((res) => {
           resolve(this.normalizeData ? this._returnDataHandler(res.data) : res.data);
         })
-        .catch(err => {
+        .catch((err) => {
           if (err) {
             resolve(this._returnErrorHandler(err));
           }
