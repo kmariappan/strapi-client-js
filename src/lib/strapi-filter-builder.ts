@@ -1,7 +1,6 @@
 import { AxiosInstance } from 'axios';
 import { generateQueryString, generateQueryFromRawString, stringToArray } from './helpers';
 import { StrapiClientHelper } from './strapi-client-helper';
-import { User } from './types/auth';
 import { InferedTypeFromArray, PublicationState, StrapiApiResponse } from './types/base';
 import { CrudSorting, PopulateDeepOptions, RelationalFilterOperators } from './types/crud';
 
