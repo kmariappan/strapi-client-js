@@ -1,6 +1,7 @@
 import { AxiosInstance } from 'axios';
 import { generateQueryString, generateQueryFromRawString, stringToArray } from './helpers';
 import { StrapiClientHelper } from './strapi-client-helper';
+import { User } from './types/auth';
 import { InferedTypeFromArray, PublicationState, StrapiApiResponse } from './types/base';
 import { CrudSorting, PopulateDeepOptions, RelationalFilterOperators } from './types/crud';
 
@@ -9,7 +10,13 @@ export class StrapiFilterBuilder<T> extends StrapiClientHelper<T> {
   private normalizeData: boolean;
   private debug: boolean;
 
-  constructor(url: string, axiosInstance: AxiosInstance, normalizeData: boolean, debug: boolean) {
+  constructor(
+    url: string,
+    axiosInstance: AxiosInstance,
+    normalizeData: boolean,
+    debug: boolean,
+    private isNotUserContent: boolean
+  ) {
     super(url);
     this.debug = debug;
     this.url = url;
@@ -23,16 +30,30 @@ export class StrapiFilterBuilder<T> extends StrapiClientHelper<T> {
       console.log(this.url);
     }
     return new Promise<StrapiApiResponse<T>>((resolve) => {
-      this.httpClient
-        .get<StrapiApiResponse<T>>(this.url)
-        .then((res) => {
-          resolve(this.normalizeData ? this._returnDataHandler(res.data) : res.data);
-        })
-        .catch((err) => {
-          if (err) {
-            resolve(this._returnErrorHandler(err));
-          }
-        });
+      if (this.isNotUserContent) {
+        this.httpClient
+          .get<StrapiApiResponse<T>>(this.url)
+          .then((res) => {
+            resolve(this.normalizeData ? this._returnDataHandler(res.data) : res.data);
+          })
+          .catch((err) => {
+            if (err) {
+              resolve(this._returnErrorHandler(err));
+            }
+          });
+      }
+      if (!this.isNotUserContent) {
+        this.httpClient
+          .get<T>(this.url)
+          .then((res) => {
+            resolve({ data: res.data, meta: undefined });
+          })
+          .catch((err) => {
+            if (err) {
+              resolve(this._returnErrorHandler(err));
+            }
+          });
+      }
     });
   }
 

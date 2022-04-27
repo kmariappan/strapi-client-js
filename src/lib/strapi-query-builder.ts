@@ -42,7 +42,13 @@ export class StrapiQueryBuilder<T> extends StrapiClientHelper<T> {
       this.url = `${this.url}?${queryString}`;
     }
 
-    return new StrapiFilterBuilder<T[]>(this.url, this.httpClient, this.normalizData, this.debug);
+    return new StrapiFilterBuilder<T[]>(
+      this.url,
+      this.httpClient,
+      this.normalizData,
+      this.debug,
+      this.isNotUserContent
+    );
   }
 
   /**
@@ -57,7 +63,13 @@ export class StrapiQueryBuilder<T> extends StrapiClientHelper<T> {
       this.url = `${this.url}?${query}`;
     }
 
-    return new StrapiFilterBuilder<T[]>(this.url, this.httpClient, this.normalizData, this.debug);
+    return new StrapiFilterBuilder<T[]>(
+      this.url,
+      this.httpClient,
+      this.normalizData,
+      this.debug,
+      this.isNotUserContent
+    );
   }
 
   /**
