@@ -100,6 +100,29 @@ export class StrapiAuthClient extends StrapiClientHelper<AuthData> {
   }
 
   /**
+   *
+   * @returns Get the user object by JWT token
+   */
+  public async getMe(): Promise<StrapiApiResponse<User>> {
+    return new Promise<StrapiApiResponse<User>>((resolve) => {
+      this.httpClient
+        .get<User>(EndPoint.auth.getMe)
+        .then((res) => {
+          resolve({ data: res.data });
+        })
+        .catch((err: any) => {
+          if (err) {
+            const error = err.response.data.error as StrapiApiError;
+            return resolve({
+              data: null,
+              error,
+            });
+          }
+        });
+    });
+  }
+
+  /**
    * Inside a browser context, `signOut()` will remove the logged in user from the browser session
    * and log them out - removing all items from localstorage and then trigger a "SIGNED_OUT" event.
    *
