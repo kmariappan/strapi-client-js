@@ -41,12 +41,12 @@ export class StrapiClient {
     return this.options.url;
   }
 
-  setToken(token?: string): void {
-    if (token) {
-      this.httpClient.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-    } else {
-      delete this.httpClient.defaults.headers.common['Authorization'];
-    }
+  setToken(token: string): void {
+    this.httpClient.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+  }
+
+  removeToken(): void {
+    delete this.httpClient.defaults.headers.common['Authorization'];
   }
 
   private _initStrapiAuthClient(axiosInstance: AxiosInstance) {
